@@ -5,7 +5,7 @@
         <div class="card-content is-paddingless">
           <div class="imagen" :style="{backgroundImage: `url(${entry.imagen})`}"></div>
           <div class="datos">
-            <p class="username is-size-7">Por {{ entry.username }} - {{ entry.cuando}}</p>
+            <p class="username is-size-7">Por {{ entry.username }} - {{ entry.cuando | timeAgo }}</p>
             <p class="caption">{{ entry.descripcion }}</p>
           </div>
         </div>
@@ -23,12 +23,18 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   name: "EntryItem",
   props: {
     entry: {
       type: Object,
       required: true
+    }
+  },
+  filters: {
+    timeAgo(timestamp) {
+      return moment.unix(timestamp).fromNow();
     }
   }
 };

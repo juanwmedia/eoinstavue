@@ -28,6 +28,9 @@ section {
   flex-grow: 1;
   padding: 1rem;
   padding-top: 50px;
-  padding-bottom: 60px;
+  padding-bottom: 10px;
+  &:last-of-type {
+    padding-bottom: 100px;
+  }
 }
 </style>
