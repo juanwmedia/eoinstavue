@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import EntryList from './components/EntryList.vue'
 import UserRegister from './components/UserRegister.vue'
 import UserLogin from './components/UserLogin.vue'
+import UserRecover from './components/UserRecover.vue'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: UserLogin
+    },
+    {
+      path: '/recover',
+      name: 'Recover',
+      component: UserRecover
     }
   ]
 })
