@@ -26,6 +26,10 @@ const store = new Vuex.Store({
       firebase.usersCollection.doc(state.user.uid).get().then(res => {
         commit('saveUserProfile', res.data());
       }).catch(error => console.error(error.message));
+    },
+    cleanUser({ commit }) {
+      commit('saveUser', null);
+      commit('saveUserProfile', {});
     }
   }
 })
