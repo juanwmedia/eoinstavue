@@ -71,7 +71,7 @@
 import ErrorMessages from "./ErrorMessages.vue";
 import firebase from "../firebase.js";
 export default {
-  name: "AppRegister",
+  name: "UserRegister",
   data() {
     return {
       trabajando: false,
