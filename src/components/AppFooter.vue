@@ -7,7 +7,10 @@
         </div>
         <div class="column has-text-centered">
           <a href="#">
-            <i class="fas fa-camera"></i>
+            <input type="file" name="file" id="file" class="inputfile" @change="submitPhoto" />
+            <label for="file">
+              <i class="fas fa-camera"></i>
+            </label>
           </a>
         </div>
         <div class="logout column has-text-centered">
@@ -26,6 +29,19 @@ import { mapState } from "vuex";
 export default {
   name: "AppFooter",
   methods: {
+    submitPhoto(event) {
+      const files = event.target.files;
+      if (!files.length) return;
+      const reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+
+      reader.onload = event => {
+        this.$store.commit("assingSubmission", event.target.result);
+        this.$store.commit("setSubmitting", true);
+      };
+
+      document.querySelector("#file").value = "";
+    },
     async logout() {
       try {
         await firebase.auth.signOut();
@@ -56,6 +72,10 @@ section {
 
 i {
   font-size: 50px;
+}
+
+#file {
+  display: none;
 }
 
 .logout {

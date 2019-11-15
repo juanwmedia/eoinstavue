@@ -16,6 +16,8 @@ const store = new Vuex.Store({
     entries: null,
     user: null,
     userProfile: {},
+    photoSubmission: null,
+    submitting: false,
   },
   mutations: {
     loadEntries(state, val) {
@@ -26,6 +28,12 @@ const store = new Vuex.Store({
     },
     saveUserProfile(state, val) {
       state.userProfile = val;
+    },
+    assingSubmission(state, val) {
+      state.photoSubmission = val;
+    },
+    setSubmitting(state, val) {
+      state.submitting = val;
     }
   },
   actions: {
