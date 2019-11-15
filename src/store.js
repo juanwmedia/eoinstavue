@@ -2,6 +2,13 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import firebase from './firebase.js';
 
+firebase.auth.onAuthStateChanged(user => {
+  if (user) {
+    store.commit('saveUser', user);
+    store.dispatch('getUserProfile');
+  }
+});
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
