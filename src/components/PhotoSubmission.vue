@@ -24,7 +24,7 @@
 
 <script>
 import ErrorMessages from "./ErrorMessages.vue";
-// import firebase from "../firebase.js";
+import firebase from "../firebase.js";
 import { mapState } from "vuex";
 export default {
   name: "PhotoSubmission",
@@ -37,7 +37,30 @@ export default {
   },
   methods: {
     async submitPhoto() {
-      console.log("Guardando imagen...");
+      this.trabajando = true;
+      this.mensajeError = "";
+
+      const uploadPhoto = () => {
+        let fileName = `photo_${Date.now()}.jpg`;
+        return firebase.storage
+          .ref(fileName)
+          .putString(this.photoSubmission, "data_url");
+      };
+
+      function getDownloadURL(ref) {
+        return ref.getDownloadURL();
+      }
+
+      try {
+        let upload = await uploadPhoto();
+        let photoURL = await getDownloadURL(upload.ref);
+        this.trabajando = false;
+        console.log(photoURL);
+      } catch (error) {
+        console.error(error.message);
+        this.trabajando = false;
+        this.mensajeError = error.message;
+      }
     }
   },
   computed: {
