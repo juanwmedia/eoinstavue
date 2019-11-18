@@ -40,6 +40,7 @@ export default {
       this.trabajando = true;
       this.mensajeError = "";
 
+      // 1- Subir la imagen a Cloud Storage
       const uploadPhoto = () => {
         let fileName = `photo_${Date.now()}.jpg`;
         return firebase.storage
@@ -47,15 +48,30 @@ export default {
           .putString(this.photoSubmission, "data_url");
       };
 
+      // 2- Obtenemos la URL de descarga de la imagen subida
       function getDownloadURL(ref) {
         return ref.getDownloadURL();
       }
 
+      // 3- Guardar una referencia en Cloud Firestore
+      const publishPhoto = photoURL => {
+        return firebase.entriesCollection.add({
+          cuando: new Date(),
+          caption: "",
+          filtro: "",
+          url: photoURL,
+          likes: 0,
+          userId: this.user.uid,
+          username: `${this.userProfile.nombre} ${this.userProfile.apellidos}`
+        });
+      };
+
       try {
         let upload = await uploadPhoto();
         let photoURL = await getDownloadURL(upload.ref);
+        await publishPhoto(photoURL);
         this.trabajando = false;
-        console.log(photoURL);
+        this.$store.commit("setSubmitting", false);
       } catch (error) {
         console.error(error.message);
         this.trabajando = false;
@@ -64,7 +80,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["photoSubmission"])
+    ...mapState(["photoSubmission", "user", "userProfile"])
   },
   components: {
     ErrorMessages
