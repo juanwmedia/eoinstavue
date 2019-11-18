@@ -1,5 +1,6 @@
 <template>
   <section class="section">
+    <PhotoSubmission v-if="submitting" />
     <div class="container">
       <EntryItem v-for="entry in entries" :entry="entry" :key="entry.cuando" />
     </div>
@@ -8,6 +9,8 @@
 
 <script>
 import EntryItem from "./EntryItem.vue";
+import { mapState } from "vuex";
+import PhotoSubmission from "./PhotoSubmission.vue";
 import entries from "../entries.js";
 export default {
   name: "EntryList",
@@ -17,7 +20,11 @@ export default {
     };
   },
   components: {
-    EntryItem
+    EntryItem,
+    PhotoSubmission
+  },
+  computed: {
+    ...mapState(["submitting"])
   }
 };
 </script>
