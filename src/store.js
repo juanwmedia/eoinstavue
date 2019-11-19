@@ -7,6 +7,18 @@ firebase.auth.onAuthStateChanged(user => {
     store.commit('saveUser', user);
     store.dispatch('getUserProfile');
   }
+
+  // Recibimos el stream de fotos desde Firebase Cloud Firestore
+  firebase.entriesCollection.orderBy('cuando', 'desc').onSnapshot(querySnapshot => {
+    let entries = [];
+    querySnapshot.forEach(doc => {
+      let entry = doc.data();
+      entry.id = doc.id;
+      entries.push(entry);
+    });
+
+    store.commit('loadEntries', entries);
+  });
 });
 
 Vue.use(Vuex)

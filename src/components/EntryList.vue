@@ -2,7 +2,7 @@
   <section class="section">
     <PhotoSubmission v-if="submitting" />
     <div class="container">
-      <EntryItem v-for="entry in entries" :entry="entry" :key="entry.cuando" />
+      <EntryItem v-for="(entry, $index) in entries" :entry="entry" :key="$index" />
     </div>
   </section>
 </template>
@@ -11,20 +11,15 @@
 import EntryItem from "./EntryItem.vue";
 import { mapState } from "vuex";
 import PhotoSubmission from "./PhotoSubmission.vue";
-import entries from "../entries.js";
+// import entries from "../entries.js";
 export default {
   name: "EntryList",
-  data() {
-    return {
-      entries
-    };
-  },
   components: {
     EntryItem,
     PhotoSubmission
   },
   computed: {
-    ...mapState(["submitting"])
+    ...mapState(["submitting", "entries"])
   }
 };
 </script>

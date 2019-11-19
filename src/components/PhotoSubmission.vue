@@ -14,7 +14,7 @@
           class="button is-success"
           :class="{'is-loading': trabajando}"
         >Guardar</button>
-        <button @click="cancelSubmission" class="button">Cancelar</button>
+        <button :disabled="trabajando" @click="cancelSubmission" class="button">Cancelar</button>
 
         <ErrorMessages v-show="mensajeError" :mensaje="mensajeError" />
       </footer>
