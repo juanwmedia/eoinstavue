@@ -42,6 +42,10 @@ const store = new Vuex.Store({
         commit('saveUserProfile', res.data());
       }).catch(error => console.error(error.message));
     },
+    cancelSubmission({ commit }) {
+      commit('setSubmitting', false);
+      commit('assingSubmission', null);
+    },
     cleanUser({ commit }) {
       commit('saveUser', null);
       commit('saveUserProfile', {});

@@ -14,7 +14,7 @@
           class="button is-success"
           :class="{'is-loading': trabajando}"
         >Guardar</button>
-        <button class="button">Cancelar</button>
+        <button @click="cancelSubmission" class="button">Cancelar</button>
 
         <ErrorMessages v-show="mensajeError" :mensaje="mensajeError" />
       </footer>
@@ -36,6 +36,9 @@ export default {
     };
   },
   methods: {
+    cancelSubmission() {
+      this.$store.dispatch("cancelSubmission");
+    },
     async submitPhoto() {
       this.trabajando = true;
       this.mensajeError = "";
