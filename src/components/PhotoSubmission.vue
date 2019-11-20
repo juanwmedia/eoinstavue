@@ -73,6 +73,15 @@ export default {
         let upload = await uploadPhoto();
         let photoURL = await getDownloadURL(upload.ref);
         await publishPhoto(photoURL);
+
+        this.$nextTick(() => {
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth"
+          });
+        });
+
         this.trabajando = false;
         this.$store.commit("setSubmitting", false);
       } catch (error) {
