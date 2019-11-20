@@ -8,9 +8,10 @@
         <div class="column has-text-centered">
           <a href="#">
             <input type="file" name="file" id="file" class="inputfile" @change="submitPhoto" />
-            <label for="file">
+            <label v-if="user" for="file">
               <i class="fas fa-camera"></i>
             </label>
+            <i v-else @click="submitPhoto" class="fas fa-camera"></i>
           </a>
         </div>
         <div class="logout column has-text-centered">
@@ -30,6 +31,12 @@ export default {
   name: "AppFooter",
   methods: {
     submitPhoto(event) {
+      if (!this.user) {
+        if (this.$route.name !== "Login") {
+          this.$router.push({ name: "Login" });
+        }
+        return;
+      }
       const files = event.target.files;
       if (!files.length) return;
       const reader = new FileReader();
