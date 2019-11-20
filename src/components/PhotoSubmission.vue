@@ -7,6 +7,18 @@
       </header>
       <section class="modal-card-body">
         <img :src="photoSubmission" alt />
+        <!-- Caption -->
+        <div class="field">
+          <div class="control">
+            <h4 class="subtitle">Título</h4>
+            <input
+              v-model.trim="caption"
+              class="input"
+              type="text"
+              placeholder="Describe la foto que estas subiendo"
+            />
+          </div>
+        </div>
       </section>
       <footer class="modal-card-foot">
         <button
@@ -32,7 +44,8 @@ export default {
     return {
       trabajando: false,
       mensajeError: "",
-      downloadURL: ""
+      downloadURL: "",
+      caption: ""
     };
   },
   methods: {
@@ -60,7 +73,7 @@ export default {
       const publishPhoto = photoURL => {
         return firebase.entriesCollection.add({
           cuando: new Date(),
-          caption: "",
+          caption: this.caption,
           filtro: "",
           url: photoURL,
           likes: 0,
