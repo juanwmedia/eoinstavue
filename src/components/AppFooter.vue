@@ -5,14 +5,16 @@
         <div class="column">
           <!-- Aquí irá el botón del perfil -->
         </div>
-        <div class="column has-text-centered">
-          <a href="#">
-            <input type="file" name="file" id="file" class="inputfile" @change="submitPhoto" />
-            <label v-if="user" for="file">
-              <i class="fas fa-camera"></i>
-            </label>
-            <i v-else @click="submitPhoto" class="fas fa-camera"></i>
-          </a>
+        <div class="capture column has-text-centered">
+          <!-- Capturar foto -->
+          <i @click="capturePhoto" class="fas fa-camera"></i>
+
+          <!-- Añadir desde la galería -->
+          <input type="file" name="file" id="file" class="inputfile" @change="addFromGallery" />
+          <label v-if="user" for="file">
+            <i class="fas fa-file-image"></i>
+          </label>
+          <i v-else @click="addFromGallery" class="fas fa-file-image"></i>
         </div>
         <div class="logout column has-text-centered">
           <a v-if="user" href="#" @click="logout">
@@ -30,7 +32,10 @@ import { mapState } from "vuex";
 export default {
   name: "AppFooter",
   methods: {
-    submitPhoto(event) {
+    capturePhoto() {
+      console.log("Capturar foto");
+    },
+    addFromGallery(event) {
       if (!this.user) {
         if (this.$route.name !== "Login") {
           this.$router.push({ name: "Login" });
@@ -83,6 +88,15 @@ i {
 
 #file {
   display: none;
+}
+
+.capture i {
+  color: #3273dc;
+  cursor: pointer;
+  margin: 0 10px;
+  &:last-of-type {
+    font-size: 40px;
+  }
 }
 
 .logout {
