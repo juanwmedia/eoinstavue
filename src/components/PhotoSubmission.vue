@@ -6,7 +6,10 @@
         <p class="modal-card-title">Editar captura</p>
       </header>
       <section class="modal-card-body">
-        <img :src="photoSubmission" alt />
+        <div :class="selectedFilter">
+          <img :src="photoSubmission" />
+        </div>
+
         <!-- Caption -->
         <div class="field">
           <div class="control">
@@ -18,6 +21,18 @@
               placeholder="Describe la foto que estas subiendo"
             />
           </div>
+        </div>
+
+        <!-- Filtro -->
+        <h4 class="subtitle">Selecciona filtro</h4>
+        <div class="select">
+          <select v-model="selectedFilter">
+            <option
+              v-for="filter in filters"
+              :value="filter.name"
+              :key="filters.indexOf(filter)"
+            >{{ filter.name }}</option>
+          </select>
         </div>
       </section>
       <footer class="modal-card-foot">
@@ -40,12 +55,16 @@ import firebase from "../firebase.js";
 import { mapState } from "vuex";
 export default {
   name: "PhotoSubmission",
+  created() {
+    this.selectedFilter = this.filters[0].name;
+  },
   data() {
     return {
       trabajando: false,
       mensajeError: "",
       downloadURL: "",
-      caption: ""
+      caption: "",
+      selectedFilter: ""
     };
   },
   methods: {
@@ -74,7 +93,7 @@ export default {
         return firebase.entriesCollection.add({
           cuando: new Date(),
           caption: this.caption,
-          filtro: "",
+          filtro: this.selectedFilter,
           url: photoURL,
           likes: 0,
           userId: this.user.uid,
@@ -105,7 +124,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["photoSubmission", "user", "userProfile"])
+    ...mapState(["photoSubmission", "user", "userProfile", "filters"])
   },
   components: {
     ErrorMessages
