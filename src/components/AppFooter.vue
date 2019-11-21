@@ -14,8 +14,10 @@
       </div>
 
       <div class="columns is-mobile">
-        <div class="column">
-          <!-- Aquí irá el botón del perfil -->
+        <div class="profile column has-text-centered">
+          <a href="#" @click="openProfile">
+            <i class="fas fa-user"></i>
+          </a>
         </div>
         <div class="capture column has-text-centered">
           <!-- Capturar foto -->
@@ -49,6 +51,9 @@ export default {
     };
   },
   methods: {
+    openProfile() {
+      this.$router.push({ name: "Profile" });
+    },
     capturePhoto() {
       if (!this.user) {
         if (this.$route.name !== "Login") {
@@ -149,7 +154,8 @@ i {
   }
 }
 
-.logout {
+.logout,
+.profile {
   display: flex;
   align-items: center;
   justify-content: center;
