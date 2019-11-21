@@ -1,6 +1,8 @@
 <template>
   <section class="section">
     <div class="container">
+      <ErrorMessages v-show="mensajeError" :mensaje="mensajeError" />
+
       <div class="card">
         <div class="card-content is-paddingless">
           <div class="imagen" :class="entry.filtro" :style="{backgroundImage: `url(${entry.url})`}"></div>
@@ -10,11 +12,17 @@
           </div>
         </div>
         <footer class="card-footer">
+          <!-- Like foto -->
           <div class="card-footer-item">
             <a @click="likePhoto" class="votar" href="#">
               <i class="fas fa-heart"></i>
             </a>
             <span class="votos">{{ entry.likes }} likes</span>
+          </div>
+
+          <!-- Borrar foto -->
+          <div v-if="photoOwned" class="card-footer-item">
+            <a @click.prevent="deletePhoto" href="#">Eliminar</a>
           </div>
         </footer>
       </div>
@@ -23,6 +31,7 @@
 </template>
 
 <script>
+import ErrorMessages from "./ErrorMessages.vue";
 import moment from "moment";
 import firebase from "../firebase.js";
 import { mapState } from "vuex";
@@ -43,7 +52,8 @@ export default {
   data() {
     return {
       liked: true,
-      likeId: ""
+      likeId: "",
+      mensajeError: ""
     };
   },
   props: {
@@ -76,15 +86,32 @@ export default {
       } catch (error) {
         console.error(error.message);
       }
+    },
+    deletePhoto() {
+      this.mensajeError = "";
+      firebase.entriesCollection
+        .doc(this.entry.id)
+        .delete()
+        .catch(error => {
+          console.error(error.message);
+          this.mensajeError = "Error eliminando imagen";
+        });
     }
   },
   computed: {
+    photoOwned() {
+      if (!this.user) return false;
+      return this.user.uid === this.entry.userId;
+    },
     ...mapState(["user"])
   },
   filters: {
     timeAgo(timestamp) {
       return moment(timestamp.toDate()).fromNow();
     }
+  },
+  components: {
+    ErrorMessages
   }
 };
 </script>
