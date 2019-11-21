@@ -11,10 +11,10 @@
         </div>
         <footer class="card-footer">
           <div class="card-footer-item">
-            <a class="votar" href="#">
+            <a @click="likePhoto" class="votar" href="#">
               <i class="fas fa-heart"></i>
             </a>
-            <span class="votos">{{ entry.likes }} votos</span>
+            <span class="votos">{{ entry.likes }} likes</span>
           </div>
         </footer>
       </div>
@@ -24,13 +24,62 @@
 
 <script>
 import moment from "moment";
+import firebase from "../firebase.js";
+import { mapState } from "vuex";
 export default {
   name: "EntryItem",
+  async created() {
+    if (this.user) {
+      this.likeId = this.user.uid + "_" + this.entry.id;
+
+      try {
+        let doc = await firebase.likesCollection.doc(this.likeId).get();
+        this.liked = !doc.exists ? false : true;
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+  },
+  data() {
+    return {
+      liked: true,
+      likeId: ""
+    };
+  },
   props: {
     entry: {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    async likePhoto() {
+      if (this.liked) return;
+
+      try {
+        // Guardar like
+        let saveLike = await firebase.likesCollection.doc(this.likeId).set({
+          photoId: this.entry.id,
+          userId: this.user.uid
+        });
+
+        // Ajustar conteo de likes en foto actual
+        let addLike = await firebase.entriesCollection
+          .doc(this.entry.id)
+          .update({
+            likes: this.entry.likes + 1
+          });
+
+        await Promise.all([saveLike, addLike]);
+
+        this.liked = true;
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+  },
+  computed: {
+    ...mapState(["user"])
   },
   filters: {
     timeAgo(timestamp) {
