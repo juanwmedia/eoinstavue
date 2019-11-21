@@ -1,6 +1,18 @@
 <template>
   <section class="section">
     <div class="container">
+      <!-- Capturar foto -->
+      <div v-show="streaming" id="stream-container" class="has-text-centered">
+        <a href="#" @click="cancelPhoto">Cancelar</a>
+        <hr />
+        <div id="stream"></div>
+        <hr />
+        <a href="#" @click="snapPhoto">
+          <i class="fas fa-dot-circle"></i>
+        </a>
+        <hr />
+      </div>
+
       <div class="columns is-mobile">
         <div class="column">
           <!-- Aquí irá el botón del perfil -->
@@ -31,9 +43,43 @@ import firebase from "../firebase.js";
 import { mapState } from "vuex";
 export default {
   name: "AppFooter",
+  data() {
+    return {
+      streaming: false
+    };
+  },
   methods: {
     capturePhoto() {
-      console.log("Capturar foto");
+      if (!this.user) {
+        if (this.$route.name !== "Login") {
+          this.$router.push({ name: "Login" });
+        }
+        return;
+      }
+
+      this.streaming = true;
+
+      // WebcamJS
+      setTimeout(() => {
+        window.Webcam.set({
+          image_format: "jpeg",
+          width: 320,
+          height: 240,
+          jpeg_quality: 90
+        });
+        window.Webcam.attach("#stream");
+      }, 500);
+    },
+    snapPhoto() {
+      window.Webcam.snap(data_uri => {
+        this.$store.commit("assingSubmission", data_uri);
+        this.$store.commit("setSubmitting", true);
+        this.cancelPhoto();
+      });
+    },
+    cancelPhoto() {
+      this.streaming = false;
+      window.Webcam.reset();
     },
     addFromGallery(event) {
       if (!this.user) {
@@ -88,6 +134,10 @@ i {
 
 #file {
   display: none;
+}
+
+#stream {
+  margin: 0 auto;
 }
 
 .capture i {
